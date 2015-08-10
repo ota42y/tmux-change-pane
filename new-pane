@@ -1,0 +1,18 @@
+#!/bin/zsh
+# inspire by: https://github.com/abicky/swap-pane
+
+if [ -z "$TMUX" ]; then
+    echo "Not in a tmux session" >&2
+    exit 1
+fi
+
+zparseopts -D v=verbose
+
+current_pane=$(tmux display-message -p '#I.#P')
+new_pane=$(tmux new-window -dPF '#I.#P')
+
+tmux swap-pane -s $current_pane -t $new_pane
+
+if [ "$verbose" ]; then
+	echo $new_pane
+fi

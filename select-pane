@@ -1,0 +1,38 @@
+#!/bin/zsh
+# inspire by: https://github.com/abicky/swap-pane
+
+if [ -z "$TMUX" ]; then
+    echo "Not in a tmux session" >&2
+    exit 1
+fi
+
+before_pane=$1
+current_pane=$2
+
+trap "restore; exit 1" 1 2 3 15
+function restore {
+  tmux swap-pane -t $before_pane -s $current_pane
+  tmux kill-pane -t $current_pane
+}
+
+panes=$(tmux list-panes -sF '#I.#P #{pane_title}' | egrep -v "^($current_pane|$before_pane)")
+selected_pane=$(echo $panes | percol | sed 's/ .*//')
+
+
+echo "pane"
+echo $panes
+echo "select-pane"
+echo $selected_pane
+echo "before-pane"
+echo $before_pane
+
+
+if [ -z "$selected_pane" ]; then
+	echo "not solected"
+	restore
+	return 1
+fi
+
+tmux swap-pane -t $before_pane -s $current_pane
+tmux swap-pane -t $before_pane -s $selected_pane
+tmux kill-pane -t $current_pane

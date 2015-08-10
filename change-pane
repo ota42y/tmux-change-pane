@@ -1,0 +1,12 @@
+#!/bin/zsh
+# inspire by: https://github.com/abicky/swap-pane
+
+if [ -z "$TMUX" ]; then
+    echo "Not in a tmux session" >&2
+    exit 1
+fi
+
+current_pane=$(tmux display-message -p '#I.#P')
+new_pane_name=$(new-pane -v)
+tmux send-keys "select-pane $current_pane $new_pane_name" C-m
+
