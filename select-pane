@@ -1,6 +1,8 @@
 #!/bin/zsh
 # inspire by: https://github.com/abicky/swap-pane
 
+alias message="tmux display-message"
+
 if [ -z "$TMUX" ]; then
     echo "Not in a tmux session" >&2
     exit 1
@@ -15,9 +17,23 @@ function restore {
   tmux kill-pane -t $current_pane
 }
 
-panes=$(tmux list-panes -sF '#I.#P #{pane_title}' | egrep -v "^($current_pane|$before_pane)")
-selected_pane=$(echo $panes | percol | sed 's/ .*//')
 
+if type peco > /dev/null 2>&1; then
+	COMMAND="peco"
+elif type percol > /dev/null 2>&1; then
+	COMMAND="percol"
+fi
+
+if [ -z "${COMMAND+x}" ]; then
+	message "can't find peco or percol command"
+	restore
+	return 1
+fi
+echo "use -- $COMMAND"
+
+
+panes=$(tmux list-panes -sF '#I.#P #{pane_title}' | egrep -v "^($current_pane|$before_pane)")
+selected_pane=$(echo $panes | $COMMAND | sed 's/ .*//')
 
 echo "pane"
 echo $panes
@@ -26,9 +42,8 @@ echo $selected_pane
 echo "before-pane"
 echo $before_pane
 
-
 if [ -z "$selected_pane" ]; then
-	echo "not solected"
+	echo "not solected" >$2
 	restore
 	return 1
 fi
