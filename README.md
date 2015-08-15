@@ -11,7 +11,7 @@ This is inspired by [swap-pane](https://github.com/abicky/swap-pane).
 ## 1. Add files to your PATH
 
 ```
-git clone  """""""""""TODO
+git clone git@github.com:ota42y/tmux-change-pane.git
 cp * /path/to/your/bin/
 ```
 
