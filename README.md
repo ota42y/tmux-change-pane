@@ -12,7 +12,8 @@ This is inspired by [swap-pane](https://github.com/abicky/swap-pane).
 
 ```
 git clone git@github.com:ota42y/tmux-change-pane.git
-cp * /path/to/your/bin/
+cd tmux-change-pane
+cp *-pane /path/to/your/bin/
 ```
 
 ## 2. Install pero (or percol)
